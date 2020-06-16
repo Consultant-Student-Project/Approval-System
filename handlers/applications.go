@@ -18,11 +18,23 @@ func NewApplications(l *log.Logger) *Applications {
 }
 
 func (a *Applications) GetApplications(rw http.ResponseWriter, r *http.Request) {
-	// Get Applications
+	a.l.Println("Handle GET Applications")
+
+	al := data.GetApplications()
+
+	err := al.ToJSON(rw)
+
+	if err != nil {
+		http.Error(rw, "Unable to marshall json", http.StatusInternalServerError)
+	}
+
 }
 
 func (a *Applications) AddApplication(rw http.ResponseWriter, r *http.Request) {
-	// TODO: Add Application
+	a.l.Println("Handle POST Application")
+
+	application := r.Context().Value(KeyApplication{}).(data.Application)
+	data.AddApplication(&application)
 }
 
 type KeyApplication struct{}
@@ -33,8 +45,8 @@ func (a Applications) MiddlewareValidateApplication(next http.Handler) http.Hand
 
 		err := application.FromJSON(r.Body)
 		if err != nil {
-			a.l.Println("[ERROR] deserializing comment", err)
-			http.Error(rw, "Error reading comment", http.StatusBadRequest)
+			a.l.Println("[ERROR] deserializing application", err)
+			http.Error(rw, "Error reading application", http.StatusBadRequest)
 			return
 		}
 

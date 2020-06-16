@@ -1,0 +1,9 @@
+database:
+  user: root
+  password: root
+  net: tcp
+  addr: mongodb://localhost:27017
+  dbname: ConsultantStudentProject
+
+server:
+  address: :9090
