@@ -18,7 +18,7 @@ type Application struct {
 	Faculty    string `json:"faculty"`
 	Department string `json:"department"`
 	ImageURL   string `json:"imageURL"`
-	Approved   bool   `json:"approved"`
+	Done       bool   `json:"approved"`
 	CreatedOn  string `json:"-"`
 }
 
@@ -76,7 +76,7 @@ func GetApplications() Applications {
 func AddApplication(a *Application) {
 	a.ID = getNextID()
 	a.CreatedOn = time.Now().UTC().String()
-	a.Approved = false
+	a.Done = false
 	_, err := Collection.InsertOne(context.TODO(), a)
 	if err != nil {
 		log.Fatal(err)

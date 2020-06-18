@@ -1,9 +1,8 @@
-FROM golang:1.14
+FROM golang:latest
 
-WORKDIR /go/src/app
-COPY . .
-
-RUN go get -d -v ./...
-RUN go install -v ./...
-
-CMD ["app"]
+EXPOSE 9090
+RUN mkdir /app
+ADD . /app/
+WORKDIR /app
+RUN go build -o main .
+CMD ["/app/main"]
