@@ -2,7 +2,7 @@ database:
   user: root
   password: root
   net: tcp
-  addr: mongodb://localhost:27017
+  addr: mongodb://mongo:27017
   dbname: ConsultantStudentProject
 
 server:
