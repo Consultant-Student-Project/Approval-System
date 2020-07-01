@@ -22,17 +22,19 @@ func main() {
 	data.DatabaseConnection()
 
 	l := log.New(os.Stdout, "Approval-System", log.LstdFlags)
-
 	sm := mux.NewRouter()
 
-	ch := handlers.NewApplications(l)
+	ah := handlers.NewApplications(l)
 
 	getRouter := sm.Methods(http.MethodGet).Subrouter()
-	getRouter.HandleFunc("/", ch.GetApplications)
+	getRouter.HandleFunc("/", ah.GetApplications)
 
 	postRouter := sm.Methods(http.MethodPost).Subrouter()
-	postRouter.HandleFunc("/", ch.AddApplication)
-	postRouter.Use(ch.MiddlewareValidateApplication)
+	postRouter.HandleFunc("/", ah.AddApplication)
+	postRouter.Use(ah.MiddlewareValidateApplication)
+
+	putRouter := sm.Methods(http.MethodPut).Subrouter()
+	putRouter.HandleFunc("/{appID:[0-9]+}", ah.FinishApplication)
 
 	s := http.Server{
 		Addr:         config.C.Server.Address, // configure the bind address

@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/Consultant-Student-Project/Approval-System/data"
+	"github.com/gorilla/mux"
 )
 
 type Applications struct {
@@ -35,6 +37,19 @@ func (a *Applications) AddApplication(rw http.ResponseWriter, r *http.Request) {
 
 	application := r.Context().Value(KeyApplication{}).(data.Application)
 	data.AddApplication(&application)
+}
+func (a *Applications) FinishApplication(rw http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	appID, err := strconv.Atoi(vars["appID"])
+	if err != nil {
+		http.Error(rw, "Unable to convert id", http.StatusBadRequest)
+		return
+	}
+
+	a.l.Println("Handle PUT Application")
+
+	data.SetApplicationDone(appID)
+
 }
 
 type KeyApplication struct{}

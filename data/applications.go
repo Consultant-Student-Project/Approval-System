@@ -18,7 +18,7 @@ type Application struct {
 	Faculty    string `json:"faculty"`
 	Department string `json:"department"`
 	ImageURL   string `json:"imageURL"`
-	Done       bool   `json:"approved"`
+	Done       bool   `json:"done"`
 	CreatedOn  string `json:"-"`
 }
 
@@ -38,6 +38,18 @@ type Applications []*Application
 func (a *Applications) ToJSON(w io.Writer) error {
 	e := json.NewEncoder(w)
 	return e.Encode(a)
+}
+func SetApplicationDone(postID int) {
+	_, err := Collection.UpdateOne(
+		context.TODO(),
+		bson.M{"id": postID},
+		bson.D{
+			{"$set", bson.D{{"done", true}}},
+		},
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 func FindApplications() Applications {
 	var results Applications
